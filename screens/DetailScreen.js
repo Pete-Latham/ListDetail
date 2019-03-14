@@ -20,9 +20,9 @@ class DetailScreen extends Component {
       company,
       address,
       filmName,
-      filmUrl,
     } = this.props.navigation.getParam('contact');
     let isFemale = gender === 'female';
+
     return (
       <View style={styles.container}>
         <Image style={styles.image} source={{ uri: picture }} />

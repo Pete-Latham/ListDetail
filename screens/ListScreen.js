@@ -8,13 +8,6 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-// Refreshing data ....
-//   Needs Axios, presumably
-//   Make data request on ComponentDidMount()
-//   Sort out data and render
-
-// import contacts from '../assets/contacts.json';
-
 class ListScreen extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +29,6 @@ class ListScreen extends Component {
   };
 
   getFreshData() {
-    console.log('Getting data...');
     axios
       .get('https://robocontacts.herokuapp.com/api/contacts?random')
       .then(({ data }) => {
@@ -46,11 +38,9 @@ class ListScreen extends Component {
         console.log('Something has gone wrong');
         console.log(error);
       });
-    console.log('Done');
   }
 
   componentDidMount() {
-    console.log('Mounting...');
     this.getFreshData();
   }
 
