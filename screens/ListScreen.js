@@ -1,16 +1,30 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableHighlight,
+} from 'react-native';
+import axios from 'axios';
 
-import contacts from '../assets/contacts.json';
+// Refreshing data ....
+//   Needs Axios, presumably
+//   Make data request on ComponentDidMount()
+//   Sort out data and render
+
+// import contacts from '../assets/contacts.json';
 
 class ListScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       item: '',
+      contacts: [],
     };
     this.onPress = this.onPress.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.getFreshData = this.getFreshData.bind(this);
   }
 
   static navigationOptions = {
@@ -20,6 +34,25 @@ class ListScreen extends Component {
     },
     headerTintColor: '#ffffff',
   };
+
+  getFreshData() {
+    console.log('Getting data...');
+    axios
+      .get('https://robocontacts.herokuapp.com/api/contacts?random')
+      .then(({ data }) => {
+        this.setState({ contacts: data });
+      })
+      .catch(error => {
+        console.log('Something has gone wrong');
+        console.log(error);
+      });
+    console.log('Done');
+  }
+
+  componentDidMount() {
+    console.log('Mounting...');
+    this.getFreshData();
+  }
 
   onPress(item) {
     this.props.navigation.navigate('Detail', { contact: item });
@@ -36,23 +69,23 @@ class ListScreen extends Component {
 
   renderItem({ item }) {
     return (
-      <View>
-        <Text
-          underlayColor={'#e4e4e4'}
-          onPress={() => {
-            this.onPress(item);
-          }} // Use the anonymous function to gain control of the argument passing rather than a reference
-          style={styles.listItem}>
-          {item.name}
-        </Text>
-      </View>
+      <TouchableHighlight
+        style={styles.list}
+        underlayColor={'#e4e4e4'}
+        onPress={() => {
+          this.onPress(item); // Use the anonymous function to gain control of the argument passing rather than a reference
+        }}>
+        <Text style={styles.listItem}>{item.name}</Text>
+      </TouchableHighlight>
     );
   }
 
   render() {
     return (
       <FlatList
-        data={contacts}
+        onRefresh={this.getFreshData}
+        refreshing={false}
+        data={this.state.contacts}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
         ItemSeparatorComponent={this.renderSeparator}
@@ -69,11 +102,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   listItem: {
-    height: 50,
     fontSize: 18,
     paddingLeft: 10,
     paddingRight: 10,
-    backgroundColor: '#fff',
+  },
+  list: {
+    justifyContent: 'center',
+    height: 50,
   },
   labelText: {
     fontWeight: 'bold',
