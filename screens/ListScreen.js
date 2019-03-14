@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableHighlight,
+} from 'react-native';
 
 import contacts from '../assets/contacts.json';
 
@@ -36,16 +42,14 @@ class ListScreen extends Component {
 
   renderItem({ item }) {
     return (
-      <View>
-        <Text
-          underlayColor={'#e4e4e4'}
-          onPress={() => {
-            this.onPress(item);
-          }} // Use the anonymous function to gain control of the argument passing rather than a reference
-          style={styles.listItem}>
-          {item.name}
-        </Text>
-      </View>
+      <TouchableHighlight
+        style={styles.list}
+        underlayColor={'#e4e4e4'}
+        onPress={() => {
+          this.onPress(item); // Use the anonymous function to gain control of the argument passing rather than a reference
+        }}>
+        <Text style={styles.listItem}>{item.name}</Text>
+      </TouchableHighlight>
     );
   }
 
@@ -69,11 +73,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   listItem: {
-    height: 50,
+    // height: 50,
     fontSize: 18,
     paddingLeft: 10,
     paddingRight: 10,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
+  },
+  list: {
+    // alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
   },
   labelText: {
     fontWeight: 'bold',
